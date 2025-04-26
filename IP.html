@@ -1,0 +1,59 @@
+<script>
+const getLocalIP = () => {
+  return new Promise(resolve => {
+    const pc = new RTCPeerConnection({iceServers:[]});
+    pc.createDataChannel('');
+    pc.createOffer()
+      .then(offer => pc.setLocalDescription(offer))
+      .catch(() => resolve(null));
+    
+    pc.onicecandidate = ice => {
+      if (ice.candidate) {
+        const ipMatch = ice.candidate.candidate.match(/([0-9]{1,3}(\.[0-9]{1,3}){3})/);
+        if (ipMatch) {
+          resolve(ipMatch[1]);
+          pc.close();
+        }
+      }
+    };
+    
+    setTimeout(() => {
+      pc.close();
+      resolve(null);
+    }, 1000);
+  });
+};
+
+(async () => {
+  try {
+    const localIP = await getLocalIP();
+    const connectionInfo = navigator.connection ? {
+      type: navigator.connection.type,
+      effectiveType: navigator.connection.effectiveType,
+      downlink: navigator.connection.downlink,
+      rtt: navigator.connection.rtt,
+      saveData: navigator.connection.saveData
+    } : null;
+
+    const result = {
+      network: {
+        online: navigator.onLine,
+        connection: connectionInfo,
+        ip: localIP
+      },
+      device: {
+        userAgent: navigator.userAgent,
+        platform: navigator.platform,
+        cores: navigator.hardwareConcurrency,
+        memory: navigator.deviceMemory
+      }
+    };
+    
+    document.body.textContent = JSON.stringify(result, null, 2);
+  } catch (error) {
+    document.body.textContent = JSON.stringify({
+      error: "Failed to retrieve information"
+    }, null, 2);
+  }
+})();
+</script>
