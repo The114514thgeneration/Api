@@ -1,7 +1,7 @@
 <script>
     const params = new URLSearchParams(window.location.search);
     const text = params.get('text');
-    const action = params.get('action') || 'encode'; // 默认编码
+    const action = params.get('type') || 'encode'; // 默认编码
     
     const response = { status: "error", message: "请提供text参数" };
     
