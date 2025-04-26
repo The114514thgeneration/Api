@@ -1,0 +1,24 @@
+<script>
+    const params = new URLSearchParams(window.location.search);
+    const timestamp = params.get('timestamp');
+    const format = params.get('format') || 'local'; // local或utc
+    
+    const response = { status: "error", message: "请提供timestamp参数" };
+    
+    if (timestamp) {
+        const ts = isNaN(timestamp) ? new Date(timestamp).getTime() : parseInt(timestamp);
+        
+        if (isNaN(ts)) {
+            response.message = "无效的时间戳或日期格式";
+        } else {
+            response.status = "success";
+            response.timestamp = ts;
+            response.localTime = new Date(ts).toLocaleString();
+            response.utcTime = new Date(ts).toUTCString();
+            response.isoTime = new Date(ts).toISOString();
+            delete response.message;
+        }
+    }
+    
+    document.write(JSON.stringify(response));
+</script>
