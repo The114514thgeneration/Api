@@ -1,0 +1,27 @@
+<script>
+    const params = new URLSearchParams(window.location.search);
+    const text = params.get('text');
+    const action = params.get('action') || 'compress'; // compress / decompress
+
+    function compress(text) {
+        return LZString.compressToEncodedURIComponent(text);
+    }
+
+    function decompress(compressed) {
+        return LZString.decompressFromEncodedURIComponent(compressed);
+    }
+
+    const response = { status: "error", message: "请提供 text 参数" };
+
+    if (text) {
+        response.status = "success";
+        response.action = action;
+        response.result = (action === 'compress') 
+            ? compress(text) 
+            : decompress(text);
+        delete response.message;
+    }
+
+    document.write(JSON.stringify(response, null, 2));
+</script>
+<script src="https://cdn.jsdelivr.net/npm/lz-string@1.4.4/libs/lz-string.min.js"></script>
