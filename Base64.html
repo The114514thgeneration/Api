@@ -1,0 +1,28 @@
+<script>
+    const params = new URLSearchParams(window.location.search);
+    const text = params.get('text');
+    const action = params.get('action') || 'encode'; // 默认编码
+    
+    const response = { status: "error", message: "请提供text参数" };
+    
+    if (text) {
+        response.status = "success";
+        response.original = text;
+        
+        if (action === 'encode') {
+            response.encoded = btoa(unescape(encodeURIComponent(text)));
+        } else if (action === 'decode') {
+            try {
+                response.decoded = decodeURIComponent(escape(atob(text)));
+            } catch (e) {
+                response.status = "error";
+                response.message = "Base64解码失败，请检查输入";
+            }
+        }
+        
+        response.action = action;
+        delete response.message;
+    }
+    
+    document.write(JSON.stringify(response));
+</script>
