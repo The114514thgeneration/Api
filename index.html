@@ -67,7 +67,7 @@
         <h2>Api</h2>
         <ul>
             <li>
-                <a href="#" onclick="showApiInfo('MD5加密', 'https://the114514thgeneration.github.io/Api/MD5.html', 'https://the114514thgeneration.github.io/Api/MD5.html?text=你好', 'text(加密的文本)')">MD5加密</a>
+                <a href="#" onclick="showApiInfo('MD5加密', 'https://the114514thgeneration.github.io/Api/MD5.html', 'https://the114514thgeneration.github.io/Api/MD5.html?text=你好', 'text(加密的文本)', '{\n  "result": "a5c7635e5b6d1a36",\n  "original": "你好",\n  "algorithm": "MD5"\n}')">MD5加密</a>
             </li>
         </ul>
     </section>
@@ -85,10 +85,12 @@
             <h2 id="modalTitle"></h2>
             <p><strong>链接:</strong></p>
             <pre id="modalUrl"></pre>
-            <p><strong>示例:</strong></p>
+            <p><strong>示例请求:</strong></p>
             <pre id="modalExample"></pre>
             <p><strong>参数:</strong></p>
             <pre id="modalElements"></pre>
+            <p><strong>返回示例:</strong></p>
+            <pre id="modalResponse"></pre>
             <button class="copy-btn" onclick="copyModalContent()">复制全部信息</button>
         </div>
     </div>
@@ -96,11 +98,12 @@
     <script>
         const modal = document.getElementById("apiModal");
         
-        function showApiInfo(name, url, example, elements) {
+        function showApiInfo(name, url, example, elements, response) {
             document.getElementById("modalTitle").textContent = name;
             document.getElementById("modalUrl").textContent = url;
             document.getElementById("modalExample").textContent = example;
             document.getElementById("modalElements").textContent = elements;
+            document.getElementById("modalResponse").textContent = response;
             modal.style.display = "block";
         }
         
@@ -113,8 +116,9 @@
             const url = document.getElementById("modalUrl").textContent;
             const example = document.getElementById("modalExample").textContent;
             const elements = document.getElementById("modalElements").textContent;
+            const response = document.getElementById("modalResponse").textContent;
             
-            const content = `API名称: ${title}\n\n链接: ${url}\n\n示例: ${example}\n\n参数: ${elements}`;
+            const content = `API名称: ${title}\n\n链接: ${url}\n\n示例请求: ${example}\n\n参数: ${elements}\n\n返回示例: ${response}`;
             
             navigator.clipboard.writeText(content).then(() => {
                 alert("API信息已复制");
