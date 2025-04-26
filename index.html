@@ -1,1 +1,49 @@
-test 
+<!DOCTYPE html>
+<html>
+<head>
+    <title>专门为Luau服务的Api</title>
+</head>
+<body>
+    <h1>专门为Luau服务的Api</h1>
+    
+    <nav>
+        <ul>
+            <li><a href="#about">关于</a></li>
+            <li><a href="#api">Api</a></li>
+            <li><a href="#links">友链</a></li>
+        </ul>
+    </nav>
+    
+    <section id="about">
+        <h2>关于</h2>
+        <p>作者LocalWenDy 由于没有服务器也没钱所以只能用Js代替php了 不过效果还是不错的</p>
+    </section>
+    
+    <section id="api">
+        <h2>Api</h2>
+        <ul>
+            <li>
+                <a href="#" onclick="showApiInfo('MD5加密', 'https://the114514thgeneration.github.io/Api/MD5.html', 'https://the114514thgeneration.github.io/Api/MD5.html?text=你好', 'text(加密的文本)')">MD5加密</a>
+            </li>
+        </ul>
+    </section>
+    
+    <section id="links">
+        <h2>友链</h2>
+        <ul>
+            <li><a href="http://rbxxiaoshuo.free.nf">rbxxiaoshuo.free.nf</a> - 看小说网站 作者123fa98</li>
+        </ul>
+    </section>
+    
+    <script>
+        function showApiInfo(name, url, example, elements) {
+            alert(
+                "API名称: " + name + "\n\n" +
+                "链接: " + url + "\n\n" +
+                "示例: " + example + "\n\n" +
+                "元素: " + elements
+            );
+        }
+    </script>
+</body>
+</html>
