@@ -24,6 +24,7 @@
         <ul>
             <li>
                 <a href="#" onclick="showApiInfo('MD5加密', 'https://the114514thgeneration.github.io/Api/MD5.html', 'https://the114514thgeneration.github.io/Api/MD5.html?text=你好', 'text(加密的文本)')">MD5加密</a>
+                <button onclick="copyApiLink('https://the114514thgeneration.github.io/Api/MD5.html')">复制链接</button>
             </li>
         </ul>
     </section>
@@ -43,6 +44,14 @@
                 "示例: " + example + "\n\n" +
                 "元素: " + elements
             );
+        }
+        
+        function copyApiLink(url) {
+            navigator.clipboard.writeText(url).then(function() {
+                alert("链接已复制: " + url);
+            }, function() {
+                alert("复制失败");
+            });
         }
     </script>
 </body>
