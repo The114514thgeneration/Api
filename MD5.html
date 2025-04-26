@@ -1,0 +1,17 @@
+<script src=".Js/Md5.js"></script>
+<script>
+    const params = new URLSearchParams(window.location.search);
+    const text = params.get('text');
+    
+    const response = { status: "error", message: "请提供text参数" };
+    
+    if (text) {
+        response.status = "success";
+        response.text = text;
+        response.md5 = md5(text);
+        response.length = text.length;
+        delete response.message;
+    }
+    
+    document.write(JSON.stringify(response));
+</script>
