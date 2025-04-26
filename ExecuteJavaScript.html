@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>在线 JavaScript 执行器</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f5f5f5; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        .panel { background: white; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .header { background: #4285f4; color: white; padding: 10px 15px; border-radius: 5px 5px 0 0; }
+        #code { width: 100%; height: 300px; padding: 15px; border: 1px solid #ddd; font-family: monospace; resize: vertical; }
+        #output { width: 100%; height: 150px; padding: 15px; border: 1px solid #ddd; background: #f9f9f9; overflow-y: auto; }
+        button { background: #4285f4; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #3367d6; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>JavaScript 在线执行器</h1>
+        
+        <div class="panel">
+            <div class="header">输入 JavaScript 代码</div>
+            <textarea id="code">// 输入你的JavaScript代码
+console.log("Hello, World!");
+
+// 示例函数
+function greet(name) {
+    return "Hello, " + name + "!";
+}
+
+// 调用示例函数
+greet("JavaScript");</textarea>
+        </div>
+        
+        <button onclick="execute()">执行代码</button>
+        <button onclick="clearOutput()">清空输出</button>
+        
+        <div class="panel">
+            <div class="header">控制台输出</div>
+            <pre id="output"></pre>
+        </div>
+    </div>
+
+    <script>
+        // 重写console.log等方法捕获输出
+        const originalConsole = {
+            log: console.log,
+            error: console.error,
+            warn: console.warn,
+            info: console.info
+        };
+        
+        function captureConsole() {
+            const output = document.getElementById('output');
+            
+            console.log = function(...args) {
+                originalConsole.log.apply(console, args);
+                output.textContent += args.join(' ') + '\n';
+            };
+            
+            console.error = function(...args) {
+                originalConsole.error.apply(console, args);
+                output.textContent += 'ERROR: ' + args.join(' ') + '\n';
+            };
+            
+            console.warn = function(...args) {
+                originalConsole.warn.apply(console, args);
+                output.textContent += 'WARN: ' + args.join(' ') + '\n';
+            };
+            
+            console.info = function(...args) {
+                originalConsole.info.apply(console, args);
+                output.textContent += 'INFO: ' + args.join(' ') + '\n';
+            };
+        }
+        
+        function restoreConsole() {
+            console.log = originalConsole.log;
+            console.error = originalConsole.error;
+            console.warn = originalConsole.warn;
+            console.info = originalConsole.info;
+        }
+        
+        function execute() {
+            const code = document.getElementById('code').value;
+            const output = document.getElementById('output');
+            
+            // 清空之前的输出
+            output.textContent = '';
+            
+            // 捕获控制台输出
+            captureConsole();
+            
+            try {
+                // 使用eval执行代码
+                eval(code);
+            } catch (e) {
+                output.textContent += 'ERROR: ' + e.message + '\n';
+            } finally {
+                // 恢复原始console方法
+                restoreConsole();
+            }
+        }
+        
+        function clearOutput() {
+            document.getElementById('output').textContent = '';
+        }
+        
+        // 初始化时捕获控制台
+        captureConsole();
+    </script>
+</body>
+</html>
