@@ -17,10 +17,10 @@
     const canvas = qrcode._el.querySelector('canvas');
     const dataURL = canvas.toDataURL('image/png');
 
-    document.write(JSON.stringify({
-        status: "success",
-        text: text,
-        qr_code: dataURL // Base64 图片
-    }, null, 2));
+    // 创建img元素并显示QR码
+    const img = document.createElement('img');
+    img.src = dataURL;
+    img.alt = 'QR Code';
+    document.body.appendChild(img);
 </script>
 <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
