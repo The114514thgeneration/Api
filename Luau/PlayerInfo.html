@@ -1,0 +1,86 @@
+<script>
+function fetchRobloxPlayerData(username) {
+    const playerInfoUrl = `https://api.roblox.com/users/get-by-username?username=${encodeURIComponent(username)}`;
+    const friendsUrl = `https://friends.roblox.com/v1/users/{userId}/friends`;
+    const presenceUrl = `https://presence.roblox.com/v1/presence/users`;
+    const thumbnailsUrl = `https://thumbnails.roblox.com/v1/users/avatar?userIds={userId}&size=150x150&format=Png&isCircular=false`;
+
+    function fetchJson(url) {
+        return fetch(url, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(response => response.json());
+    }
+
+    function fetchPlayerInfo(username) {
+        return fetchJson(playerInfoUrl).then(data => {
+            if (!data || !data.Id) {
+                throw new Error("用户未找到");
+            }
+            return {
+                username: data.Username,
+                userId: data.Id,
+                displayName: data.DisplayName
+            };
+        });
+    }
+
+    function fetchFriends(userId) {
+        const url = friendsUrl.replace("{userId}", userId);
+        return fetchJson(url).then(data => {
+            return data.data.map(friend => ({
+                friendUsername: friend.name,
+                friendUserId: friend.id
+            }));
+        });
+    }
+
+    function fetchPresence(userId) {
+        return fetchJson(`${presenceUrl}?userIds=${userId}`).then(data => {
+            const userPresence = data.userPresences.find(user => user.userId === userId);
+            return userPresence ? userPresence.lastLocation : "未知";
+        });
+    }
+
+    function fetchThumbnail(userId) {
+        const url = thumbnailsUrl.replace("{userId}", userId);
+        return fetchJson(url).then(data => {
+            return data.data[0].imageUrl || "无头像";
+        });
+    }
+
+    return fetchPlayerInfo(username).then(playerInfo => {
+        const { userId } = playerInfo;
+        return Promise.all([
+            fetchFriends(userId),
+            fetchPresence(userId),
+            fetchThumbnail(userId)
+        ]).then(([friends, lastLocation, avatarUrl]) => {
+            return {
+                ...playerInfo,
+                friends,
+                lastLocation,
+                avatarUrl
+            };
+        });
+    });
+}
+
+const params = new URLSearchParams(window.location.search);
+const username = params.get('username');
+const response = { status: "error", message: "请提供username参数" };
+
+if (username) {
+    fetchRobloxPlayerData(username).then(data => {
+        response.status = "success";
+        response.data = data;
+        delete response.message;
+    }).catch(e => {
+        response.message = "获取数据错误: " + e.message;
+    });
+}
+
+document.write(JSON.stringify(response, null, 2));
+</script>
