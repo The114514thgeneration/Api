@@ -3,6 +3,30 @@
 <head>
     <title>专门为Luau服务的Api</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        nav li {
+            display: inline;
+            margin-right: 15px;
+        }
+        nav a {
+            text-decoration: none;
+            color: #0066cc;
+        }
+        section {
+            margin-bottom: 30px;
+        }
         .modal {
             display: none;
             position: fixed;
@@ -66,12 +90,14 @@
     <section id="api">
         <h2>Api</h2>
         <ul>
-            <li>
-                <a href="#" onclick="showApiInfo('MD5加密', 'https://the114514thgeneration.github.io/Api/MD5.html', 'https://the114514thgeneration.github.io/Api/MD5.html?text=你好', 'text(加密的文本)')">MD5加密</a>
-<a href="#" onclick="showApiInfo('Base64加解密', 'https://the114514thgeneration.github.io/Api/Base64.html', 'https://the114514thgeneration.github.io/Api/Base64.html?type=encode&text=你好', 'text(加密的文本)/type(操作类型:encode(加密);decode(解密))')">Base64加解密</a>
-<a href="#" onclick="showApiInfo('IP查看', 'https://the114514thgeneration.github.io/Api/IP.html', 'https://the114514thgeneration.github.io/Api/IP.html', '无"')">当前IP查看</a>
-<a href="#" onclick="showApiInfo('浏览器性能', 'https://the114514thgeneration.github.io/Api/Performance.html', 'https://the114514thgeneration.github.io/Api/Performance.html', '返回信息 navigationStart：开始导航的时间   domLoading：开始解析DOM树的时间      domInteractive：完成DOM解析的时间      domContentLoaded：DOMContentLoaded事件完成时间      domComplete：页面及其所有子资源完成加载的时间      loadEventEnd：load事件完成时间')">浏览器性能</a>
-            </li>
+            <li><a href="#" onclick="showApiInfo('MD5加密', 'https://the114514thgeneration.github.io/Api/MD5.html', 'https://the114514thgeneration.github.io/Api/MD5.html?text=你好', 'text(加密的文本)')">MD5加密</a></li>
+            <li><a href="#" onclick="showApiInfo('Base64加解密', 'https://the114514thgeneration.github.io/Api/Base64.html', 'https://the114514thgeneration.github.io/Api/Base64.html?type=encode&text=你好', 'text(加密的文本)/type(操作类型:encode(加密);decode(解密))')">Base64加解密</a></li>
+            <li><a href="#" onclick="showApiInfo('IP查看', 'https://the114514thgeneration.github.io/Api/IP.html', 'https://the114514thgeneration.github.io/Api/IP.html', '无')">当前IP查看</a></li>
+            <li><a href="#" onclick="showApiInfo('浏览器性能', 'https://the114514thgeneration.github.io/Api/Performance.html', 'https://the114514thgeneration.github.io/Api/Performance.html', '返回信息 navigationStart：开始导航的时间   domLoading：开始解析DOM树的时间      domInteractive：完成DOM解析的时间      domContentLoaded：DOMContentLoaded事件完成时间      domComplete：页面及其所有子资源完成加载的时间      loadEventEnd：load事件完成时间')">浏览器性能</a></li>
+            <li><a href="#" onclick="showApiInfo('颜色转化', 'https://the114514thgeneration.github.io/Api/ColorTo.html', 'https://the114514thgeneration.github.io/Api/ColorTo.html?color=%23ff0000&to=rgb', 'color(要转化的颜色),to(转化颜色类型)')">颜色转换</a></li>
+            <li><a href="#" onclick="showApiInfo('二维码生成', 'https://the114514thgeneration.github.io/Api/QRCode.html', 'https://the114514thgeneration.github.io/Api/QRCode.html?text=https://baidu.com&size=200x200', 'text(链接扫过去的文本),size(默认200x200二维码大小)')">生成二维码</a></li>
+            <li><a href="#" onclick="showApiInfo('时间戳转化', 'https://the114514thgeneration.github.io/Api/TimeStamp.html', 'https://the114514thgeneration.github.io/Api/TimeStamp.html?timestamp=100000&format=local', 'timestamp(时间戳),format(转化类型:local/utc)')">时间戳转化</a></li>
+            <li><a href="#" onclick="showApiInfo('地理位置', 'https://the114514thgeneration.github.io/Api/Geography.html', 'https://the114514thgeneration.github.io/Api/Geography.html', '无')">地理位置查看(需权限)</a></li>
         </ul>
     </section>
     
