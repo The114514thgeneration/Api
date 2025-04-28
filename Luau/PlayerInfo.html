@@ -11,7 +11,12 @@ function fetchRobloxPlayerData(username) {
             headers: {
                 "Content-Type": "application/json"
             }
-        }).then(response => response.json());
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            return response.json();
+        });
     }
 
     function fetchPlayerInfo(username) {
@@ -68,9 +73,12 @@ function fetchRobloxPlayerData(username) {
     });
 }
 
+
 const params = new URLSearchParams(window.location.search);
 const username = params.get('username');
+
 const response = { status: "error", message: "请提供username参数" };
+
 
 if (username) {
     fetchRobloxPlayerData(username).then(data => {
@@ -81,6 +89,7 @@ if (username) {
         response.message = "获取数据错误: " + e.message;
     });
 }
+
 
 document.write(JSON.stringify(response, null, 2));
 </script>
