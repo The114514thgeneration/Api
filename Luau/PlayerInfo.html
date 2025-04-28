@@ -1,5 +1,5 @@
-＜script>
-async function getPlayerInfo(username) {
+   <script>
+       async function getPlayerInfo(username) {
     const API_BASE = "https://api.roblox.com";
     const USERS_API = `${API_BASE}/users/get-by-username?username=${encodeURIComponent(username)}`;
     const FRIENDS_API = "https://friends.roblox.com/v1/users/{userId}/friends";
@@ -197,5 +197,4 @@ if (username) {
 } else {
     document.write(`<pre>${JSON.stringify({"错误": "缺少用户名参数"}, null, 2)}</pre>`);
 }
-＜/script>
-
+   </script>
