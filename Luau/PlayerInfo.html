@@ -1,95 +1,201 @@
-<script>
-function fetchRobloxPlayerData(username) {
-    const playerInfoUrl = `https://api.roblox.com/users/get-by-username?username=${encodeURIComponent(username)}`;
-    const friendsUrl = `https://friends.roblox.com/v1/users/{userId}/friends`;
-    const presenceUrl = `https://presence.roblox.com/v1/presence/users`;
-    const thumbnailsUrl = `https://thumbnails.roblox.com/v1/users/avatar?userIds={userId}&size=150x150&format=Png&isCircular=false`;
+＜script>
+async function getPlayerInfo(username) {
+    const API_BASE = "https://api.roblox.com";
+    const USERS_API = `${API_BASE}/users/get-by-username?username=${encodeURIComponent(username)}`;
+    const FRIENDS_API = "https://friends.roblox.com/v1/users/{userId}/friends";
+    const FOLLOWERS_API = "https://friends.roblox.com/v1/users/{userId}/followers";
+    const FOLLOWINGS_API = "https://friends.roblox.com/v1/users/{userId}/followings";
+    const PRESENCE_API = "https://presence.roblox.com/v1/presence/users";
+    const AVATAR_API = "https://thumbnails.roblox.com/v1/users/avatar?userIds={userId}&size=420x420&format=Png";
+    const AVATAR_HEADSHOT_API = "https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds={userId}&size=420x420&format=Png";
+    const GROUPS_API = "https://groups.roblox.com/v1/users/{userId}/groups/roles";
+    const DESCRIPTION_API = `${API_BASE}/users/{userId}`;
+    const BADGES_API = "https://badges.roblox.com/v1/users/{userId}/badges";
+    const GAMES_API = "https://games.roblox.com/v1/users/{userId}/games?sortOrder=Asc&limit=100";
+    const INVENTORY_API = "https://inventory.roblox.com/v1/users/{userId}/assets/collectibles?sortOrder=Asc&limit=100";
+    const PAST_USERNAMES_API = "https://users.roblox.com/v1/users/{userId}/username-history?limit=100&sortOrder=Asc";
+    const SOCIAL_LINKS_API = "https://accountinformation.roblox.com/v1/users/{userId}/social-links";
+    const USER_PRESENCE_API = "https://www.roblox.com/user-presence/user?id={userId}";
+    const ECONOMY_API = "https://economy.roblox.com/v1/users/{userId}/currency";
+    const TRADE_VALUES_API = "https://economy.roblox.com/v1/users/{userId}/trade-values";
+    const FAVORITE_GAMES_API = "https://games.roblox.com/v1/users/{userId}/favorite/games";
+    const FAVORITE_GROUPS_API = "https://groups.roblox.com/v1/users/{userId}/groups/favorites";
+    const CONVERSATIONS_API = "https://chat.roblox.com/v2/get-user-conversations?pageNumber=1&pageSize=100";
+    const UNIVERSE_VISITS_API = "https://games.roblox.com/v1/users/{userId}/universes-visits";
+    const MEMBERSHIP_API = "https://premiumfeatures.roblox.com/v1/users/{userId}/validate-membership";
 
-    function fetchJson(url) {
-        return fetch(url, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json"
+    try {
+        const userRes = await fetch(USERS_API);
+        const userData = await userRes.json();
+
+        if (!userData.Id) return {"错误": "未找到该玩家"};
+
+        const userId = userData.Id;
+
+        const [
+            friendsRes, 
+            followersRes, 
+            followingsRes,
+            presenceRes, 
+            avatarRes, 
+            avatarHeadshotRes,
+            groupsRes, 
+            descriptionRes, 
+            badgesRes, 
+            gamesRes,
+            inventoryRes,
+            pastUsernamesRes,
+            socialLinksRes,
+            userPresenceRes,
+            economyRes,
+            tradeValuesRes,
+            favoriteGamesRes,
+            favoriteGroupsRes,
+            conversationsRes,
+            universeVisitsRes,
+            membershipRes
+        ] = await Promise.all([
+            fetch(FRIENDS_API.replace("{userId}", userId)),
+            fetch(FOLLOWERS_API.replace("{userId}", userId)),
+            fetch(FOLLOWINGS_API.replace("{userId}", userId)),
+            fetch(PRESENCE_API, {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({"userIds": [userId]})
+            }),
+            fetch(AVATAR_API.replace("{userId}", userId)),
+            fetch(AVATAR_HEADSHOT_API.replace("{userId}", userId)),
+            fetch(GROUPS_API.replace("{userId}", userId)),
+            fetch(DESCRIPTION_API.replace("{userId}", userId)),
+            fetch(BADGES_API.replace("{userId}", userId)),
+            fetch(GAMES_API.replace("{userId}", userId)),
+            fetch(INVENTORY_API.replace("{userId}", userId)),
+            fetch(PAST_USERNAMES_API.replace("{userId}", userId)),
+            fetch(SOCIAL_LINKS_API.replace("{userId}", userId)),
+            fetch(USER_PRESENCE_API.replace("{userId}", userId)),
+            fetch(ECONOMY_API.replace("{userId}", userId)),
+            fetch(TRADE_VALUES_API.replace("{userId}", userId)),
+            fetch(FAVORITE_GAMES_API.replace("{userId}", userId)),
+            fetch(FAVORITE_GROUPS_API.replace("{userId}", userId)),
+            fetch(CONVERSATIONS_API),
+            fetch(UNIVERSE_VISITS_API.replace("{userId}", userId)),
+            fetch(MEMBERSHIP_API.replace("{userId}", userId))
+        ]);
+
+        // 解析所有响应
+        const friends = await friendsRes.json();
+        const followers = await followersRes.json();
+        const followings = await followingsRes.json();
+        const presence = await presenceRes.json();
+        const avatar = await avatarRes.json();
+        const avatarHeadshot = await avatarHeadshotRes.json();
+        const groups = await groupsRes.json();
+        const description = await descriptionRes.json();
+        const badges = await badgesRes.json();
+        const games = await gamesRes.json();
+        const inventory = await inventoryRes.json();
+        const pastUsernames = await pastUsernamesRes.json();
+        const socialLinks = await socialLinksRes.json();
+        const userPresence = await userPresenceRes.json();
+        const economy = await economyRes.json();
+        const tradeValues = await tradeValuesRes.json();
+        const favoriteGames = await favoriteGamesRes.json();
+        const favoriteGroups = await favoriteGroupsRes.json();
+        const conversations = await conversationsRes.json();
+        const universeVisits = await universeVisitsRes.json();
+        const membership = await membershipRes.json();
+
+        const friendNames = friends.data?.map(friend => friend.name) || [];
+        const followerNames = followers.data?.map(follower => follower.name) || [];
+        const followingNames = followings.data?.map(following => following.name) || [];
+        const gameNames = games.data?.map(game => game.name) || [];
+        const groupNames = groups.data?.map(group => group.group.name) || [];
+        const favoriteGameNames = favoriteGames.data?.map(game => game.name) || [];
+        const favoriteGroupNames = favoriteGroups.data?.map(group => group.name) || [];
+        const pastUsernameList = pastUsernames.data?.map(entry => entry.username) || [];
+        const socialLinksList = socialLinks.data?.map(link => ({
+            type: link.type,
+            url: link.url,
+            title: link.title
+        })) || [];
+        const inventoryItems = inventory.data?.map(item => ({
+            name: item.name,
+            assetId: item.assetId,
+            serialNumber: item.serialNumber
+        })) || [];
+
+        return {
+            "基本信息": {
+                "用户名": username,
+                "用户ID": userId,
+                "显示名称": userData.DisplayName || username,
+                "创建日期": userData.Created || "未知",
+                "过去用户名": pastUsernameList,
+                "用户描述": description.description || "无描述",
+                "会员状态": membership.isValid ? "Premium" : "普通会员",
+                "社交链接": socialLinksList
+            },
+            "外观": {
+                "头像链接": avatar.data[0]?.imageUrl || "无",
+                "头像头像链接": avatarHeadshot.data[0]?.imageUrl || "无"
+            },
+            "社交": {
+                "好友数量": friends.data?.length || 0,
+                "好友名称列表": friendNames,
+                "粉丝数量": followers.data?.length || 0,
+                "粉丝名称列表": followerNames,
+                "关注数量": followings.data?.length || 0,
+                "关注名称列表": followingNames,
+                "最近对话数量": conversations.length || 0
+            },
+            "在线状态": {
+                "当前状态": presence.userPresences[0]?.userPresenceType === 2 ? "在线" : "离线",
+                "最后在线时间": presence.userPresences[0]?.lastOnline || "未知",
+                "最后位置": presence.userPresences[0]?.lastLocation || "无状态信息",
+                "最后访问的游戏": userPresence.lastOnlineInGameName || "无"
+            },
+            "创作": {
+                "作品数量": games.data?.length || 0,
+                "作品名称列表": gameNames,
+                "宇宙访问次数": universeVisits.totalVisits || 0
+            },
+            "群组": {
+                "加入群组数量": groups.data?.length || 0,
+                "群组名称列表": groupNames,
+                "收藏群组数量": favoriteGroups.data?.length || 0,
+                "收藏群组名称列表": favoriteGroupNames
+            },
+            "收藏": {
+                "收藏游戏数量": favoriteGames.data?.length || 0,
+                "收藏游戏名称列表": favoriteGameNames
+            },
+            "成就与资产": {
+                "成就数量": badges.data?.length || 0,
+                "库存物品数量": inventory.data?.length || 0,
+                "库存物品列表": inventoryItems
+            },
+            "经济": {
+                "Robux余额": economy.robux || 0,
+                "交易限制": tradeValues.canTrade || false,
+                "交易价值": tradeValues.totalValue || 0
             }
-        }).then(response => {
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
-            }
-            return response.json();
-        });
-    }
+        };
 
-    function fetchPlayerInfo(username) {
-        return fetchJson(playerInfoUrl).then(data => {
-            if (!data || !data.Id) {
-                throw new Error("用户未找到");
-            }
-            return {
-                username: data.Username,
-                userId: data.Id,
-                displayName: data.DisplayName
-            };
-        });
+    } catch (error) {
+        console.error("获取数据失败:", error);
+        return {"错误": "获取数据失败", "详情": error.message};
     }
-
-    function fetchFriends(userId) {
-        const url = friendsUrl.replace("{userId}", userId);
-        return fetchJson(url).then(data => {
-            return data.data.map(friend => ({
-                friendUsername: friend.name,
-                friendUserId: friend.id
-            }));
-        });
-    }
-
-    function fetchPresence(userId) {
-        return fetchJson(`${presenceUrl}?userIds=${userId}`).then(data => {
-            const userPresence = data.userPresences.find(user => user.userId === userId);
-            return userPresence ? userPresence.lastLocation : "未知";
-        });
-    }
-
-    function fetchThumbnail(userId) {
-        const url = thumbnailsUrl.replace("{userId}", userId);
-        return fetchJson(url).then(data => {
-            return data.data[0].imageUrl || "无头像";
-        });
-    }
-
-    return fetchPlayerInfo(username).then(playerInfo => {
-        const { userId } = playerInfo;
-        return Promise.all([
-            fetchFriends(userId),
-            fetchPresence(userId),
-            fetchThumbnail(userId)
-        ]).then(([friends, lastLocation, avatarUrl]) => {
-            return {
-                ...playerInfo,
-                friends,
-                lastLocation,
-                avatarUrl
-            };
-        });
-    });
 }
-
 
 const params = new URLSearchParams(window.location.search);
-const username = params.get('username');
-
-const response = { status: "error", message: "请提供username参数" };
-
+const username = params.get('name');
 
 if (username) {
-    fetchRobloxPlayerData(username).then(data => {
-        response.status = "success";
-        response.data = data;
-        delete response.message;
-    }).catch(e => {
-        response.message = "获取数据错误: " + e.message;
+    getPlayerInfo(username).then(response => {
+        document.write(`<pre>${JSON.stringify(response, null, 2)}</pre>`);
     });
+} else {
+    document.write(`<pre>${JSON.stringify({"错误": "缺少用户名参数"}, null, 2)}</pre>`);
 }
+＜/script>
 
-
-document.write(JSON.stringify(response, null, 2));
-</script>
